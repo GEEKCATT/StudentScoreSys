@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/login.css"/>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="app">
+			<div class="center">
+				<h3>登陆页面</h3>
+				<form action="" method="">
+					<span>用户名:</span>
+					<input type="text" name="username" id="username" v-model="username"/><!-- v-model传递参数 -->
+					<span v-bind:style="tishicss" > {{tishi}}</span> <!-- 单向绑定 -->
+						
+					<br/>
+					<span>密码:</span>
+					<input type="password" name="password" id="password" v-model="password"/><br/>
+					<input type="button" value="登陆" v-on:click="login()"/> <!-- v-on:click点击事件,触发script中写好的方法 -->
+				</form>
+			</div>
+		</div>
+		
+		<script type="text/javascript">
+			let vue = new Vue({
+				el:'#app',
+				data:{
+					username:'',
+					password:'',
+					tishicss:'color:red',
+					tishi:""
+					
+				},
+				methods:{
+					login:function(){
+						// console.log(this.username);
+						// console.log(this.password);
+						// console.log(this);//this is vue
+						let that=this;//用于接收vue对象,下边的xhr是XMLHttpRequest对象
+						//ajax  axios  用于和服务端通信  请求-响应
+						let xhr = new XMLHttpRequest();
+						xhr.onreadystatechange=function(){
+							if(xhr.readyState==4){//3次握手
+								if(xhr.status==200){//404就是访问失败,自定义的码
+									console.log(xhr.responseText);//服务器返回的值
+									let res=xhr.responseText;
+									let resJson=JSON.parse(res);
+									console.log(resJson);
+									console.log(resJson.result.errorcode);
+									if(resJson.result.errorcode==0){
+										//登陆成功
+										that.tishi="";
+										location.href="布局.html";//跳转页面
+									}else{
+										//登陆失败
+										console.log(this);//this is XMLHttpRequest
+										that.tishi="用户名或密码不正确";
+									}	
+								}
+							}
+						}
+						xhr.open('POST','http://localhost:8080/StudentScoreSys/user/login.do',true)
+						xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=UTF-8");
+						xhr.send('username='+this.username+'&password='+this.password);
+
+					}
+				}
+			});
+		</script>
+		
+	</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<!-- 引入样式 -->
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+		<!-- 引入组件库 -->
+		<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<!-- <script src="https://unpkg.com/axios/dist/axois.min.js" type="text/javascript" charset="utf-8"></script> -->
+	</head>
+	<body>
+		<div id="app">
+			<el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
+			  <el-form-item label="学号">
+				<el-input v-model="formLabelAlign.Sid"></el-input>
+			  </el-form-item>
+			  <el-form-item>
+			    <el-button type="primary" @click="del">删除</el-button>
+			  </el-form-item>
+			</el-form>
+		</div>
+		<script type="text/javascript">
+			let app= new Vue({
+				el: '#app',
+				data: {
+					labelPosition: 'right',
+					formLabelAlign: {
+					  Sid: 1,
+					}
+				},
+				methods: {
+					del:function(){
+						// console.log(this.username);
+						// console.log(this.password);
+						// console.log(this);//this is vue
+						let that=this;//用于接收vue对象,下边的xhr是XMLHttpRequest对象
+						//ajax  axios  用于和服务端通信  请求-响应
+						let xhr = new XMLHttpRequest();
+						xhr.onreadystatechange=function(){
+							if(xhr.readyState==4){//3次握手
+								if(xhr.status==200){//404就是访问失败,自定义的码
+									console.log(xhr.responseText);//服务器返回的值
+								}
+							}
+						}
+						xhr.open('POST','http://localhost:8080/StudentScoreSys/deleteInforStudent',true)
+						xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=UTF-8");
+						xhr.send('Sid='+this.formLabelAlign.Sid);
+
+					}
+				},
+				created: function() {
+
+
+
+
+				}
+			})
+		</script>
+	</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<!-- 引入样式 -->
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+		<!-- 引入组件库 -->
+		<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+		<script src="https://unpkg.com/axios/dist/axois.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<input type="button" value="删除" v-on:click="delete()"/>
+		hello world!
+		<div id="app">
+			<!-- <input type="button" value="删除" v-on:click="delete()"/> -->
+			<table>
+				<tr>
+					<td>用户编号</td>
+					<td>用户名</td>
+					<td>密码</td>
+					<td>操作</td>
+					<td>
+						<!-- <input type="button" value="删除" v-on:click="delete()"/> -->
+						<input type="button" value="修改" />
+						<input type="button" value="双倍" />
+					</td>
+				</tr>
+				<tr v-for="user in userlist">
+					<td>{{user.userId}}</td>
+					<td>{{user.username}}</td>
+					<td>{{user.password}}</td>
+					<td>
+						<!-- <input type="button" value="删除" v-on:click="delete()"/> -->
+						<input type="button" value="修改" />
+						<input type="button" value="双倍" />
+					</td>
+				</tr>
+			</table>
+		</div>
+		<script type="text/javascript">
+			let vue = new Vue({
+				el:'#app',
+				data:{
+					userlist:''
+				},
+				methods:{
+					delete:function(){
+						// console.log(this.username);
+						// console.log(this.password);
+						// console.log(this);//this is vue
+						let that=this;//用于接收vue对象,下边的xhr是XMLHttpRequest对象
+						//ajax  axios  用于和服务端通信  请求-响应
+						let xhr = new XMLHttpRequest();
+						xhr.onreadystatechange=function(){
+							if(xhr.readyState==4){//3次握手
+								if(xhr.status==200){//404就是访问失败,自定义的码
+									console.log(xhr.responseText);//服务器返回的值
+									let res=xhr.responseText;
+									let resJson=JSON.parse(res);
+									console.log(resJson);
+									console.log(resJson.result.errorcode);
+									if(resJson.result.errorcode==0){
+										//登陆成功
+										that.tishi="";
+										location.href="index.html";//跳转页面
+									}else{
+										//登陆失败
+										console.log(this);//this is XMLHttpRequest
+										that.tishi="用户名或密码不正确";
+									}	
+								}
+							}
+						}
+						xhr.open('POST','http://localhost:8080/StudentScoreSys/user/login.do',true)
+						xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=UTF-8");
+						xhr.send('username='+this.username+'&password='+this.password);
+
+					}
+					
+				},
+				
+				
+				//创建完成自动加载此方法
+				created:function(){
+					console.log(1);
+					let that=this
+					let xhr = new XMLHttpRequest();
+					xhr.onreadystatechange=function(){
+						console.log(2);
+						console.log(xhr.readyState);
+						if(xhr.readyState==4){//3次握手
+							console.log(3);
+							if(xhr.status==200){//404就是访问失败,自定义的码
+								console.log(xhr.responseText);//服务器返回的值
+								let res = JSON.parse(xhr.responseText);
+								that.userlist=res.result.userlist;
+								console.log(that.userlist);
+							}
+						}
+					}
+					xhr.open('POST','http://localhost:8080/StudentScoreSys/SelectAllUserServlet',true);
+					xhr.send();
+				}
+			})
+		</script>
+	</body>
+</html>

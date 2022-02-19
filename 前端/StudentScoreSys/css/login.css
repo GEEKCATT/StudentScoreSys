@@ -1,0 +1,19 @@
+body{
+	background-image: url(../img/loginback.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+.center{
+	width: 300px;
+	height: 200px;
+	background-color: rgba(0,0,0,0.3);/*0.3是透明度*/
+	margin: 0px auto;/* 居中 */
+	margin-left: 200px;
+	margin-top: 200px;
+}
+h3{
+	text-align: center;
+	letter-spacing: 10px;/* 控制文字间距,中文:letter,英文:word */
+	color: white;
+	padding-top: 10px;
+}
